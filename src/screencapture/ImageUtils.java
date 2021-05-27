@@ -8,7 +8,6 @@ package screencapture;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import javax.swing.JFrame;
 
 public class ImageUtils {
 
@@ -27,19 +26,5 @@ public class ImageUtils {
         BufferedImage bi = ImageIO.read( is );
         
         return bi;
-    }
-    
-    // show BufferedImage
-    public static void showImage( BufferedImage bi ) {
-        JFrame frame = new JFrame();
-        ImagePanel panel = new ImagePanel();
-        frame.setResizable( true );
-        frame.add( panel );
-        frame.pack();
-        
-        panel.setImage( bi );
-        panel.repaint();
-        
-        frame.setVisible( true );
     }
 }

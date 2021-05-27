@@ -16,23 +16,28 @@ public class Server {
     
     private static final int PORT = 5000;
     
-    private static boolean b = true;
-    
     public static void main(String[] args) throws Exception {
+        
         ServerSocket server = new ServerSocket( PORT );
-        Socket socket = server.accept();
+        
+        while ( true ) {
+            
+            Socket socket = server.accept();
+            
+            ObjectOutputStream output = new ObjectOutputStream( socket.getOutputStream() );
 
-        ObjectOutputStream output = new ObjectOutputStream( socket.getOutputStream() );
+            Robot robot = new Robot();
+            BufferedImage bi = robot.createScreenCapture( new Rectangle( Toolkit.getDefaultToolkit().getScreenSize() ) );
+            
+            byte[] bytes = ImageUtils.toByteArray( bi, "png" );
 
-        Robot robot = new Robot();
-        BufferedImage bi = robot.createScreenCapture( new Rectangle( Toolkit.getDefaultToolkit().getScreenSize() ) );
-        
-        byte[] bytes = ImageUtils.toByteArray( bi, "png" );
-        
-        output.write( bytes );
-        
-        output.close();
-        
-        socket.close();
+            output.write( bytes );
+            
+            output.close();
+            
+            socket.close();
+            
+            Thread.sleep(100);
+        }
     }
 }
