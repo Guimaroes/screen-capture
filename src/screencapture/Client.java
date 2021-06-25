@@ -6,14 +6,9 @@
 package screencapture;
 
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.net.Socket;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.sound.sampled.*;
 
@@ -24,8 +19,6 @@ import javax.sound.sampled.*;
 public class Client {
     private static final int PORT = 5000;
     private static final String IP = "127.0.0.1";
-      
-    private static TargetDataLine line;
     
     static AudioFormat getAudioFormat() {
         float sampleRate = 16000;
@@ -44,7 +37,6 @@ public class Client {
             
             JFrame frame = new JFrame();
             
-//          frame.setResizable( true );
             frame.add( panel );
             frame.pack();
             frame.setVisible( true );
@@ -55,41 +47,19 @@ public class Client {
                 
                 ObjectInputStream input = new ObjectInputStream( socket.getInputStream() );
                 
-                //AUDIO---------------------------------------------------------------
-                AudioFormat format = getAudioFormat();
-                DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
-            
-                if(!AudioSystem.isLineSupported(info)) {
-                    System.out.println("Line not supported");
-                    System.exit(0);
-                }
-                line = (TargetDataLine) AudioSystem.getLine(info);
-                line.open(format);
-                line.start();
-              
-                AudioInputStream in = new AudioInputStream(line);
-                //---------------------------------------------------------------------
-
                 byte[] bytes = input.readAllBytes();
 
                 BufferedImage bi = ImageUtils.toBufferedImage( bytes );
 
-//                ImageUtils.showImage( bi );
                 panel.setImage( bi );
                 panel.repaint();
                 
                 input.close();
                 
                 socket.close();
-                
-                line.close();
-                
-                
             }
         } catch ( IOException e ) {
             System.out.println( e );
-        } catch (LineUnavailableException ex) {
-            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }
